@@ -1,3 +1,22 @@
+## Architecture 
+
+The following schema represent the architecture wanted to deploy the Azure voting app on a production workload.
+
+When you deployed an AKS, by default Azure will add a new resource group on our subscription composed with:
+- Network Security Group
+- Managed Identities
+- Virtual Machine Scale Set
+- Public IP
+- Load Balancer
+
+Keyvault will be used to store Redis secrets, such as the redis_passwd
+
+Container Registry will be used to store the Docker Image built 
+
+The managed identities will be used to allow instances running under the VMSS to have rights to get secrets from Keyvault and being allowed to pull an image from the ACR
+
+![Infrastructure schema](docs/Simplon-Terraform-Infra.drawio.svg)
+
 ## Requirements
 
 | Name | Version |
