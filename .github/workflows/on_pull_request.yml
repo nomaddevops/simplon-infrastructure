@@ -35,6 +35,11 @@ jobs:
         run: terraform fmt -check
         continue-on-error: true
 
+      - name: Az Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDS }}
+          
       - name: Terraform Init
         id: init
         run: terraform init
