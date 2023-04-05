@@ -4,7 +4,7 @@ Le module network sert a deployer le resource group mais aussi le virtual networ
 Le module est construit de façon a être le plus réutilisable possible ça évite de réécrire du code pour rien
 */
 module "network" {
-  source = "/Users/joffrey.dupire/Documents/Terraform/Modules/azure_resource_group"
+  source = "git@github.com:nomaddevops/azure_resource_group?ref=v1.0.1"
 
   location      = var.location
   subnet_config = var.subnet_config
@@ -18,7 +18,7 @@ je crée directement le cluster AKS, les paramètres pouvant varier je n'utilise
 Je récupère des éléments de sortie du module network pour m'assurer que je déploie dans la même région
 et dans le bon resource group
 */
-resource "azurerm_kubernetes_cluster" "aks" {
+/*resource "azurerm_kubernetes_cluster" "aks" {
   name                = format("%s-%s", var.name, terraform.workspace)
   location            = module.network.resource_group.location
   resource_group_name = module.network.resource_group.name
@@ -35,7 +35,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   tags = var.tags
-}
+}*/
 
 /*
  J'ai maintenant le cluster pret a acceuillir des pods/servicse etc cependant je n'ai aucun Ingress Controller.
