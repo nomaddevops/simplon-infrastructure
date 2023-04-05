@@ -22,7 +22,7 @@ variable "aks_node_pool_config" {
     default = {
       name       = "default"
       node_count = 1
-      vm_size    = "Standard_DS3_v2"
+      vm_size    = "Standard_D2_v2"
     }
   }
 }
