@@ -22,10 +22,6 @@ terraform {
 
 provider "azurerm" {
   features {}
-  subscription_id = "a1f74e2d-ec58-4f9a-a112-088e3469febb"
-  client_id       = "f9e9511a-594a-4104-ab7b-b768fe4a1439"
-  client_secret   = var.client_secret
-  tenant_id       = "a2e466aa-4f86-4545-b5b8-97da7c8febf3"
 }
 
 provider "helm" {

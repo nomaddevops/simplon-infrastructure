@@ -15,7 +15,10 @@ jobs:
       contents: read
       pull-requests: write
     env:
-      TF_VAR_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: "a1f74e2d-ec58-4f9a-a112-088e3469febb"
+      ARM_CLIENT_ID: "f9e9511a-594a-4104-ab7b-b768fe4a1439"
+      ARM_TENANT_ID: "a2e466aa-4f86-4545-b5b8-97da7c8febf3"
     steps:
       - name: add GIT_SSH_KEY
         run: |
