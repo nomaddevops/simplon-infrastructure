@@ -63,3 +63,11 @@ The managed identities will be used to allow instances running under the VMSS to
 |------|-------------|
 | <a name="output_client_certificate"></a> [client\_certificate](#output\_client\_certificate) | n/a |
 | <a name="output_kube_config"></a> [kube\_config](#output\_kube\_config) | n/a |
+
+
+## SP
+```bash
+    az ad sp create-for-rbac --name "Joff-sp" --role contributor \
+                            --scopes "/subscriptions/a1f74e2d-ec58-4f9a-a112-088e3469febb/resourceGroups/terraform" \
+                            --sdk-auth
+```
