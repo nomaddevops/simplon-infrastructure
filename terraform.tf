@@ -4,7 +4,7 @@ Le module network sert a deployer le resource group mais aussi le virtual networ
 Le module est construit de façon a être le plus réutilisable possible ça évite de réécrire du code pour rien
 */
 module "network" {
-  source = "/Users/joffrey.dupire/Documents/Terraform/Modules/azure_resource_group"
+  source = "git@github.com:nomaddevops/azure_resource_group?ref=v1.0.1"
 
   location      = var.location
   subnet_config = var.subnet_config
