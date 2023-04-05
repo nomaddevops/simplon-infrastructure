@@ -1,0 +1,16 @@
+name: Tests 
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+jobs:
+  CostChecking:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Infracost Actions
+      uses: infracost/actions@v2.1.0
+
+
+
