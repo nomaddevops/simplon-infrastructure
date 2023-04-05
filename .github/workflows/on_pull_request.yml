@@ -52,7 +52,7 @@ jobs:
         run: |
           infracost breakdown --path=${TF_ROOT} --terraform-var-file=platforms/dev/terraform.tfvars \
                               --format=json \
-                              --out-file=/tmp/infracost-base.json
+                              --out-file=/tmp/infracost-base.json --log-level debug
 
       # Checkout the current PR branch so we can create a diff.
       - name: Checkout PR branch
