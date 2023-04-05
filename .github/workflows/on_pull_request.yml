@@ -12,6 +12,7 @@ jobs:
     name: TerraformChecks
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pull-requests: write
     steps:
       - name: add GIT_SSH_KEY
