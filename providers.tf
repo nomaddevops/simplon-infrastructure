@@ -26,7 +26,7 @@ provider "azurerm" {
 
 provider "helm" {
   kubernetes {
-    config_path = "~/.kube/config"
+    config_path = ".kube/config"
   }
 
   # localhost registry with password protection

@@ -52,57 +52,25 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
 # UPDATE YOUR KUBE CONFIG OTHERWISE HELM WILL NOT BE ABLE TO DEPLOY THE CHART 
 
-resource "helm_release" "nginx_ingress" {
-  name             = "nginx-ingress-controller"
-  namespace        = "nginx-ingress-controller"
-  create_namespace = true
-  repository       = "https://charts.bitnami.com/bitnami"
-  chart            = "nginx-ingress-controller"
-  version          = "9.4.1"
 
-
-  depends_on = [
-    azurerm_kubernetes_cluster.aks,
-    module.network
-  ]
+resource "local_file" "kube_config" {
+  content  = azurerm_kubernetes_cluster.aks.kube_config_raw
+  filename = ".kube/config"
 }
 
-resource "helm_release" "cert_manager" {
-  name             = "cert-manager"
-  create_namespace = true
-  namespace        = "cert-manager"
-  repository       = "https://charts.bitnami.com/bitnami"
-  chart            = "cert-manager"
-  skip_crds        = false
-  version          = "v0.9.4"
-  depends_on = [
-    helm_release.nginx_ingress,
-    azurerm_kubernetes_cluster.aks,
-    module.network
-  ]
-}
+resource "helm_release" "chart" {
+  for_each         = var.charts
+  name             = each.key
+  namespace        = each.key
+  create_namespace = each.value.create_namespace
+  repository       = each.value.repository
+  chart            = each.key
+  version          = each.value.version
 
-resource "helm_release" "redis" {
-  name             = "redis"
-  create_namespace = true
-  namespace        = "redis"
-  repository       = "https://charts.bitnami.com/bitnami"
-  chart            = "redis"
-  skip_crds        = false
-  version          = "v17.9.2"
-
-  set {
-    name  = "global.redis.password"
-    value = "yolo"
-  }
-  set {
-    name  = "replica.replicaCount"
-    value = 1
-  }
 
   depends_on = [
-    helm_release.nginx_ingress,
     azurerm_kubernetes_cluster.aks,
-    module.network
+    module.network,
+    local_file.kube_config
   ]
 }
