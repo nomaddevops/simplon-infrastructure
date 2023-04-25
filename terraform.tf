@@ -70,7 +70,7 @@ resource "helm_release" "chart" {
   dynamic "set" {
     for_each = each.value.sets
     content {
-      name = set.key
+      name  = set.key
       value = set.value
     }
   }
