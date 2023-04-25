@@ -67,6 +67,13 @@ resource "helm_release" "chart" {
   chart            = each.key
   version          = each.value.version
 
+  dynamic "set" {
+    for_each = each.value.sets
+    content {
+      name = set.key
+      value = set.value
+    }
+  }
 
   depends_on = [
     azurerm_kubernetes_cluster.aks,
