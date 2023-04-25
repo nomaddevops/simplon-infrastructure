@@ -180,11 +180,9 @@ jobs:
       - name: tfsec
         id: sec
         uses: aquasecurity/tfsec-action@v1.0.0
-        with:
-          soft_fail: true
       
       - uses: actions/github-script@v6
-        if: github.event_name == 'pull_request'
+        if: always()
         env:
           PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
         with:
