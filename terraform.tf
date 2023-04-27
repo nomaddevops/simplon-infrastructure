@@ -4,12 +4,11 @@ Le module network sert a deployer le resource group mais aussi le virtual networ
 Le module est construit de façon a être le plus réutilisable possible ça évite de réécrire du code pour rien
 */
 module "network" {
-  source = "git@github.com:nomaddevops/azure_resource_group?ref=v1.0.1"
+  source = "git@github.com:nomaddevops/azure_resource_group?ref=v1.0.2"
 
   location      = var.location
   subnet_config = var.subnet_config
 }
-
 
 /*
 Maintenant que les bases réseaux sont déployé et pour plus de facilité ici car c'est une petite infrastructure 
@@ -28,13 +27,34 @@ resource "azurerm_kubernetes_cluster" "aks" {
     name       = var.aks_node_pool_config.default.name
     node_count = var.aks_node_pool_config.default.node_count
     vm_size    = var.aks_node_pool_config.default.vm_size
+    vnet_subnet_id = module.network.subnets.private.subnet.id
+  }
+
+  network_profile {
+    network_plugin = "azure"
   }
 
   identity {
-    type = "SystemAssigned"
+    type = "UserAssigned"
+    identity_ids = [ azurerm_user_assigned_identity.identity.id ]
   }
 
   tags = var.tags
+}
+
+resource "azurerm_user_assigned_identity" "identity" {
+  name                = format("mi-%s", var.name)
+  resource_group_name = module.network.resource_group.name
+  location            = module.network.resource_group.location
+}
+
+resource "azurerm_role_assignment" "role_assignment" {
+    for_each             = {
+    "Owner" = module.network.subnets.private.subnet.id
+    }
+    scope                = each.value
+    role_definition_name = each.key
+    principal_id         = azurerm_user_assigned_identity.identity.principal_id
 }
 
 /*
@@ -50,9 +70,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
  ou le rasoir d'Occam (shorturl.at/eBEFV)
 */
 
-# UPDATE YOUR KUBE CONFIG OTHERWISE HELM WILL NOT BE ABLE TO DEPLOY THE CHART 
-
-
 resource "local_file" "kube_config" {
   content  = azurerm_kubernetes_cluster.aks.kube_config_raw
   filename = ".kube/config"
@@ -66,6 +83,7 @@ resource "helm_release" "chart" {
   repository       = each.value.repository
   chart            = each.key
   version          = each.value.version
+  skip_crds        = each.value.skip_crds
 
   dynamic "set" {
     for_each = each.value.sets

@@ -6,7 +6,6 @@ variable "location" {
 
 variable "subnet_config" {
   default = {
-    public  = { is_multi_az = false }
     private = { is_multi_az = false }
   }
   description = "Multi az deployment for subnets"
@@ -35,4 +34,9 @@ variable "tags" {
 
 variable "charts" {
   type = any
+}
+
+variable "role_assignment" {
+  type = any
+  default = {}
 }
